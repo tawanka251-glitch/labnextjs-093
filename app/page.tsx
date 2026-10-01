@@ -86,8 +86,20 @@ export default async function Home() {
         {/* ปุ่มกดนำทาง */}
         <div className="flex flex-wrap justify-center gap-3 mt-8">
           <Link
+            href="/comments"
+            className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition-all font-medium text-sm shadow-sm hover:shadow active:scale-95 flex items-center gap-1.5"
+          >
+            💬 ระบบความคิดเห็น (Workshop)
+          </Link>
+          <Link
+            href="/contact"
+            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all font-medium text-sm shadow-sm hover:shadow active:scale-95 flex items-center gap-1.5"
+          >
+            ✉️ ติดต่อสอบถาม (Lab L0-L4)
+          </Link>
+          <Link
             href="/posts"
-            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all font-medium text-sm shadow-sm hover:shadow active:scale-95"
+            className="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl transition-all font-medium text-sm shadow-sm hover:shadow active:scale-95"
           >
             อ่านบทความทั้งหมด →
           </Link>

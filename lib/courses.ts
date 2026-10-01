@@ -1,40 +1,37 @@
-// lib/courses.ts
-export interface Course {
-    id: string;
-    code: string;
-    name: string;
-    credits: number;
-    instructor: string;
-    description: string;
-    topics: string[];
+import { prisma } from './prisma';
+import { Course, Prisma } from '@prisma/client';
+
+export type { Course };
+
+export async function getCourses(): Promise<Course[]> {
+    return await prisma.course.findMany({
+        orderBy: { code: 'asc' },
+    });
 }
 
-export const courses: Course[] = [
-    {
-        id: 'cs101',
-        code: 'CS101',
-        name: 'Computer Programming I',
-        credits: 3,
-        instructor: 'ผศ.ดร. สมชาย ใจดี',
-        description: 'ศึกษาพื้นฐานการเขียนโปรแกรม โครงสร้างการควบคุม ฟังก์ชัน อาร์เรย์',
-        topics: ['Variables & Data Types', 'Control Structures', 'Functions', 'Arrays']
-    },
-    {
-        id: 'cs202',
-        code: 'CS202',
-        name: 'Data Structures & Algorithms',
-        credits: 3,
-        instructor: 'อ.ดร. สุภาพร วิทยากุล',
-        description: 'ศึกษาโครงสร้างข้อมูลพื้นฐาน Stack, Queue, Tree และ Sorting Algorithms',
-        topics: ['Big-O Analysis', 'Stack & Queue', 'Binary Search Tree', 'Sorting']
-    },
-    {
-        id: 'cs303',
-        code: 'CS303',
-        name: 'Web Development Technology',
-        credits: 3,
-        instructor: 'อ.วิชัย พัฒนซอฟต์',
-        description: 'ศึกษาเทคโนโลยีเว็บ React, Next.js App Router และ REST API',
-        topics: ['HTML/CSS & Tailwind', 'JavaScript/TypeScript', 'Next.js App Router', 'APIs']
-    }
-];
+export async function getCourseById(id: string): Promise<Course | null> {
+    return await prisma.course.findUnique({
+        where: { id },
+    });
+}
+
+// ใช้ Prisma.CourseCreateInput แทน Omit เพื่อให้ Type ตรงกับ Prisma Schema
+export async function addCourse(data: Prisma.CourseCreateInput): Promise<Course> {
+    return await prisma.course.create({
+        data,
+    });
+}
+
+export async function updateCourse(id: string, updates: Prisma.CourseUpdateInput): Promise<Course | null> {
+    return await prisma.course.update({
+        where: { id },
+        data: updates,
+    });
+}
+
+export async function deleteCourse(id: string): Promise<boolean> {
+    await prisma.course.delete({
+        where: { id },
+    });
+    return true;
+}

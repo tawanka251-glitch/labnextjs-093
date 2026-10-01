@@ -1,13 +1,22 @@
-import { addMessage, getMessages } from '@/lib/messages';
+import { createMessage, listMessages } from '@/lib/messageService'
+
+// GET: ให้ Dashboard ดึงข้อมูลข้อความทั้งหมด [source: 1]
 export async function GET() {
-    return Response.json({ messages: getMessages() });
-}
-export async function POST(request: Request) {
-    const body = await request.json();
-    // ตรวจสอบฝั่ง Server เสมอ — ห้ามเชื่อ client อย่างเดียว
-    if (!body.name || !body.email || !body.message) {
-        return Response.json({ error: 'ข้อมูลไม่ครบ' }, { status: 400 });
+    try {
+        const messages = await listMessages()
+        return Response.json({ messages })
+    } catch (err: any) {
+        return Response.json({ error: err.message }, { status: 500 })
     }
-    const saved = addMessage(body);
-    return Response.json({ ok: true, item: saved }, { status: 201 });
+}
+
+// POST: รับข้อมูลจาก ContactForm บันทึกลง Prisma DB [source: 1, 2]
+export async function POST(request: Request) {
+    try {
+        const body = await request.json()
+        const item = await createMessage(body)
+        return Response.json({ ok: true, item }, { status: 201 })
+    } catch (err: any) {
+        return Response.json({ error: err.message }, { status: 400 })
+    }
 }

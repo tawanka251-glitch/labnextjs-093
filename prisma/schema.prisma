@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  message   String
+  tag       String?  // ← เพิ่มสำหรับ Week 11 (Lab 11)
+  authorId  String?
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  credits     Int      @default(3)
+  instructor  String
+  description String
+  topics      String[]
+  createdAt   DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  author    String
+  content   String
+  likes     Int      @default(0) // ← Comment Reaction (Week 11 Workshop)
+  hearts    Int      @default(0) // ← Comment Reaction (Week 11 Workshop)
+  createdAt DateTime @default(now())
+}
+
+

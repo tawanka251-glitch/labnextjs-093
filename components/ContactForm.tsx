@@ -1,6 +1,9 @@
 'use client'; // ← บรรทัดแรกเสมอ
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function ContactForm() {
+    const router = useRouter();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
@@ -24,21 +27,33 @@ export default function ContactForm() {
         setError('');
         setStatus('sending');
 
-        const res = await fetch('/api/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, message }),
-        });
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, message }),
+            });
 
-        if (!res.ok) {
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus('error');
+                setError(data.error || 'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง');
+                return;
+            }
+
+            setStatus('success');
+            setName('');
+            setEmail('');
+            setMessage('');
+            window.dispatchEvent(new Event('contact:updated'));
+
+            // นำทางไปยังหน้า Dashboard หลังส่งสำเร็จ
+            router.push('/dashboard');
+        } catch (err) {
             setStatus('error');
-            return;
+            setError('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
         }
-
-        setStatus('success');
-        setName('');
-        setEmail('');
-        setMessage('');
     }
 
     const isValid =
@@ -54,10 +69,11 @@ export default function ContactForm() {
                 placeholder="อีเมล" className="border p-2 w-full rounded" />
             <textarea value={message} onChange={(e) => setMessage(e.target.value)}
                 placeholder="ข้อความ" className="border p-2 w-full rounded" />
+
             {error && <p className="text-red-600 text-sm">{error}</p>}
-            {status === 'sending' && <p className="text-gray-400">กําลังส่ง...</p>}
-            {status === 'success' && <p className="text-green-600">ส่งสําเร็จ ขอบคุณครับ/ค่ะ!</p>}
-            {status === 'error' && <p className="text-red-600">ส่งไม่สําเร็จ ลองใหม่อีกครั้ง</p>}
+            {status === 'sending' && <p className="text-gray-400 text-sm">กำลังส่ง...</p>}
+            {status === 'success' && <p className="text-green-600 text-sm">ส่งสำเร็จ ขอบคุณครับ/ค่ะ!</p>}
+
             <button
                 type="submit"
                 disabled={!isValid || status === 'sending'}

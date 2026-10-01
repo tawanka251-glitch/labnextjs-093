@@ -29,6 +29,7 @@ export default async function RootLayout({
               <Link href="/posts" className="hover:text-blue-300 transition-colors">บทความ</Link>
               <Link href="/users" className="hover:text-blue-300 transition-colors">ผู้ใช้</Link>
               <Link href="/about" className="hover:text-blue-300 transition-colors">เกี่ยวกับ</Link>
+              <Link href="/contact" className="hover:text-blue-300 transition-colors">ติดต่อ</Link>
               {hasSession ? (
                 <>
                   <Link href="/dashboard" className="hover:text-blue-300 transition-colors">Dashboard</Link>
