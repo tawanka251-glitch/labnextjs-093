@@ -53,13 +53,13 @@ export async function editMessage(id: string, updates: unknown, sessionUserId?: 
   }
 }
 
-export async function listMessages(search?: string) {
+// ฟังก์ชันค้นหาข้อความแบบย่อย (Search Conflict Test)
+export async function listMessages(query?: string) {
   const all = await MessageModel.getMessages()
-  if (!search) return all
-  return all.filter(
-    (m) => m.name.includes(search) || m.message.includes(search) || (m.tag && m.tag.includes(search))
-  )
+  if (!query) return all
+  return all.filter((m) => m.name.includes(query) || m.message.includes(query))
 }
+
 
 
 export async function getMessageById(id: string) {
